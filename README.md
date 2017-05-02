@@ -53,8 +53,41 @@ MatchingType...: 1
 Certificate....: f0a96869c4fc6d52cf3a4e21c2aaa9af04a288f3c16665825273c9a82e422168
 ```
 
+## Example usage
+
+```
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"os"
+
+	"github.com/binaryfigments/checkdanemx/checks"
+)
+
+func main() {
+	domain := "example.org"
+	nameserver := "8.8.8.8"
+
+	check, err := checkdanemx.Run(domain, nameserver)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	json, err := json.MarshalIndent(check, "", "   ")
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	fmt.Printf("%s\n", json)
+	os.Exit(0)
+}
+```
+
 ## Screenshots
 
-[shot1]: https://github.com/binaryfigments/checkdanemx/raw/master/screenshots/shot1.png "Shot1"
+![shot1](https://github.com/binaryfigments/checkdanemx/raw/master/screenshots/shot1.png "shot1")
 
-[shot2]: https://github.com/binaryfigments/checkdanemx/raw/master/screenshots/shot2.png "Shot2"
+![shot2](https://github.com/binaryfigments/checkdanemx/raw/master/screenshots/shot2.png "shot2")
