@@ -55,6 +55,6 @@ Certificate....: f0a96869c4fc6d52cf3a4e21c2aaa9af04a288f3c16665825273c9a82e42216
 
 ## Screenshots
 
-[shot1]: https://raw.githubusercontent.com/binaryfigments/checkdanemx/master/screenshots/shot1.png "Shot1"
+[shot1]: https://github.com/binaryfigments/checkdanemx/raw/master/screenshots/shot1.png "Shot1"
 
-[shot2]: https://raw.githubusercontent.com/binaryfigments/checkdanemx/master/screenshots/shot2.png "Shot2"
+[shot2]: https://github.com/binaryfigments/checkdanemx/raw/master/screenshots/shot2.png "Shot2"
