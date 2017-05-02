@@ -55,7 +55,7 @@ Certificate....: f0a96869c4fc6d52cf3a4e21c2aaa9af04a288f3c16665825273c9a82e42216
 
 ## Example usage
 
-```
+```go
 package main
 
 import (
