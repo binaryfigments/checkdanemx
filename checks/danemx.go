@@ -104,8 +104,8 @@ func resolveTLSARecord(record string, nameserver string) (*checkdata.Tlsa, error
 	if err != nil {
 		return answer, err
 	}
-	for _, ain := range in.Answer {
-		if tlsa, ok := ain.(*dns.TLSA); ok {
+	for _, value := range in.Answer {
+		if tlsa, ok := value.(*dns.TLSA); ok {
 			answer.Record = record
 			answer.Certificate = tlsa.Certificate   // string
 			answer.MatchingType = tlsa.MatchingType // uint8
