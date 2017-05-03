@@ -5,7 +5,7 @@ import "time"
 // Message struct for returning the question and the answer.
 type Message struct {
 	Question Question `json:"question"`
-	Answer   Answer   `json:"answer"`
+	Answer   Answer   `json:"answer,omitempty"`
 }
 
 // Question struct for retuning what information is asked.
@@ -30,9 +30,9 @@ type MxRecords struct {
 
 // Tlsa struct for SOA information
 type Tlsa struct {
-	Record       string `json:"record,omitempty"`
-	Certificate  string `json:"certificate,omitempty"`
-	MatchingType uint8  `json:"matchingtype,omitempty"`
-	Selector     uint8  `json:"selector,omitempty"`
-	Usage        uint8  `json:"usage,omitempty"`
+	Record       string `json:"record"`
+	Certificate  string `json:"certificate"`
+	MatchingType uint8  `json:"matchingtype"`
+	Selector     uint8  `json:"selector"`
+	Usage        uint8  `json:"usage"`
 }
