@@ -1,6 +1,13 @@
 # checkdanemx
 Check DANE / TLSA for MX records
 
+Still some work in prograss. It's made for checking the TLSA records for the MX records of a domain. STARTTLS with TLSA records for DANE is is prefered bij the Dutch government https://www.forumstandaardisatie.nl/standaard/starttls-en-dane.
+
+Some things to do:
+
+* DNSSEC check, no DANE with no DNSSEC
+* Compare certificate with hash
+
 ## Installation
 
 ```
