@@ -5,7 +5,7 @@ import (
 	"crypto/sha512"
 	"crypto/tls"
 	"crypto/x509"
-	"encoding/base64"
+	"encoding/hex"
 	"fmt"
 	"net"
 	"net/smtp"
@@ -24,11 +24,11 @@ func getCertInfo(server string) (*checkdata.CertInfo, error) {
 
 	sh256 := sha256.New()
 	sh256.Write(smtpcert.RawSubjectPublicKeyInfo)
-	sh256sum := base64.URLEncoding.EncodeToString(sh256.Sum(nil))
+	sh256sum := hex.EncodeToString(sh256.Sum(nil))
 
 	sh512 := sha512.New()
 	sh512.Write(smtpcert.RawSubjectPublicKeyInfo)
-	sh512sum := base64.URLEncoding.EncodeToString(sh512.Sum(nil))
+	sh512sum := hex.EncodeToString(sh512.Sum(nil))
 
 	answer.CommonName = smtpcert.Subject.CommonName
 	answer.SubjectPublicKeyInfoFull = string(smtpcert.RawSubjectPublicKeyInfo)
