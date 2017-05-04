@@ -33,7 +33,7 @@ func getCertInfo(server string) (*checkdata.CertInfo, error) {
 	sh512sum := hex.EncodeToString(sh512.Sum(nil))
 	println(sh512sum)
 
-	println(smtpcert.RawSubjectPublicKeyInfo)
+	println(hex.EncodeToString(smtpcert.RawSubjectPublicKeyInfo))
 
 	answer.CommonName = smtpcert.Subject.CommonName
 	answer.SubjectPublicKeyInfoFull = hex.EncodeToString(smtpcert.RawSubjectPublicKeyInfo)
