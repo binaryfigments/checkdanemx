@@ -32,6 +32,7 @@ func getCertInfo(server string) (*checkdata.CertInfo, error) {
 	answer.CommonName = smtpcert.Subject.CommonName
 	answer.SubjectPublicKeyInfoFull = string(smtpcert.RawSubjectPublicKeyInfo)
 	answer.SubjectPublicKeyInfoSha256 = string(sh256sum)
+	println(string(sh256sum))
 	answer.SubjectPublicKeyInfoSha512 = string(sh512sum)
 
 	return answer, nil
