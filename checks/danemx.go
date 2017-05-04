@@ -12,7 +12,7 @@ import (
 )
 
 // Run function
-func Run(domain string, startnameserver string) (*checkdata.Message, error) {
+func Run(domain string, startnameserver string, checkCerts string) (*checkdata.Message, error) {
 	msg := new(checkdata.Message)
 	nameServer := startnameserver + ":53"
 	msg.Question.JobTime = time.Now()
@@ -44,7 +44,7 @@ func Run(domain string, startnameserver string) (*checkdata.Message, error) {
 		return msg, err
 	}
 
-	mxrecords, err := resolveMxTlsa(domain, nameServer)
+	mxrecords, err := resolveMxTlsa(domain, nameServer, checkCerts)
 	msg.Answer.MxRecords = mxrecords
 	if msg.Answer.MxRecords == nil {
 		fmt.Printf("[X] No MX records found for  %v\n", domain)
@@ -61,7 +61,7 @@ func Run(domain string, startnameserver string) (*checkdata.Message, error) {
  * TODO: Rewrite
  */
 
-func resolveMxTlsa(domain string, nameserver string) ([]*checkdata.MxRecords, error) {
+func resolveMxTlsa(domain string, nameserver string, checkCerts string) ([]*checkdata.MxRecords, error) {
 	answer := []*checkdata.MxRecords{}
 
 	m := new(dns.Msg)
@@ -83,17 +83,19 @@ func resolveMxTlsa(domain string, nameserver string) ([]*checkdata.MxRecords, er
 			checktlsamx := "_25._tcp." + hostname
 			domainmxtlsa, err := resolveTLSARecord(checktlsamx, nameserver)
 			if err != nil {
-				fmt.Printf("[X] Error checking for TLSA record %v\n", checktlsamx)
+				// fmt.Printf("[X] Error checking for TLSA record %v\n", checktlsamx)
 				mxs.TLSA = domainmxtlsa
 			} else {
 				mxs.TLSA = domainmxtlsa
-				fmt.Printf("[*] Getting certificate from %v\n", hosnameport)
-				certinfo, err := getCertInfo(hosnameport, mxs.TLSA.Selector, mxs.TLSA.MatchingType)
-				if err != nil {
-					fmt.Printf("[X] Error getting cert from, %v %v\n", hosnameport, err)
-					mxs.CertInfo = certinfo
-				} else {
-					mxs.CertInfo = certinfo
+				if checkCerts == "yes" {
+					// fmt.Printf("[*] Getting certificate from %v\n", hosnameport)
+					certinfo, err := getCertInfo(hosnameport, mxs.TLSA.Selector, mxs.TLSA.MatchingType)
+					if err != nil {
+						// fmt.Printf("[X] Error getting cert from, %v %v\n", hosnameport, err)
+						mxs.CertInfo = certinfo
+					} else {
+						mxs.CertInfo = certinfo
+					}
 				}
 			}
 			answer = append(answer, mxs)
