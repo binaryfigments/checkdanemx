@@ -18,6 +18,7 @@ func getCertInfo(server string) (*checkdata.CertInfo, error) {
 
 	smtpcert, err := runSMTP(server)
 	if err != nil {
+		println(err)
 		return answer, err
 	}
 	// fmt.Fprintf(os.Stderr, "%v\n\n", smtpcert.Answer.PeerCertificates.Subject.CommonName)
@@ -25,16 +26,19 @@ func getCertInfo(server string) (*checkdata.CertInfo, error) {
 	sh256 := sha256.New()
 	sh256.Write(smtpcert.RawSubjectPublicKeyInfo)
 	sh256sum := hex.EncodeToString(sh256.Sum(nil))
+	println(sh256sum)
 
 	sh512 := sha512.New()
 	sh512.Write(smtpcert.RawSubjectPublicKeyInfo)
 	sh512sum := hex.EncodeToString(sh512.Sum(nil))
+	println(sh512sum)
+
+	println(smtpcert.RawSubjectPublicKeyInfo)
 
 	answer.CommonName = smtpcert.Subject.CommonName
 	answer.SubjectPublicKeyInfoFull = string(smtpcert.RawSubjectPublicKeyInfo)
-	answer.SubjectPublicKeyInfoSha256 = string(sh256sum)
-	println(sh256sum)
-	answer.SubjectPublicKeyInfoSha512 = string(sh512sum)
+	answer.SubjectPublicKeyInfoSha256 = sh256sum
+	answer.SubjectPublicKeyInfoSha512 = sh512sum
 
 	return answer, nil
 }
