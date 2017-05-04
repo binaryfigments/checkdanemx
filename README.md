@@ -112,7 +112,7 @@ func main() {
 
 ## Screenshots
 
-![shot3](https://github.com/binaryfigments/checkdanemx/raw/master/screenshots/shot2.png "shot3")
+![shot3](https://github.com/binaryfigments/checkdanemx/raw/master/screenshots/shot3.png "shot3")
 
 ![shot1](https://github.com/binaryfigments/checkdanemx/raw/master/screenshots/shot1.png "shot1")
 
