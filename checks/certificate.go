@@ -29,22 +29,6 @@ func getCertInfo(server string, selector uint8, matchtype uint8) (*checkdata.Cer
 		// MatchingType 0 = cert, 1 = sha256, 2 = sha512
 		switch matchtype {
 		case 0:
-			answer.DaneKey = hex.EncodeToString(smtpcert[0].RawSubjectPublicKeyInfo)
-		case 1:
-			sh256 := sha256.New()
-			sh256.Write(smtpcert[0].RawSubjectPublicKeyInfo)
-			sh256sum := hex.EncodeToString(sh256.Sum(nil))
-			answer.DaneKey = sh256sum
-		case 2:
-			sh512 := sha512.New()
-			sh512.Write(smtpcert[0].RawSubjectPublicKeyInfo)
-			sh512sum := hex.EncodeToString(sh512.Sum(nil))
-			answer.DaneKey = sh512sum
-		}
-	case 1:
-		// MatchingType 0 = cert, 1 = sha256, 2 = sha512
-		switch matchtype {
-		case 0:
 			answer.DaneKey = hex.EncodeToString(smtpcert[0].Raw)
 		case 1:
 			sh256 := sha256.New()
@@ -54,6 +38,22 @@ func getCertInfo(server string, selector uint8, matchtype uint8) (*checkdata.Cer
 		case 2:
 			sh512 := sha512.New()
 			sh512.Write(smtpcert[0].Raw)
+			sh512sum := hex.EncodeToString(sh512.Sum(nil))
+			answer.DaneKey = sh512sum
+		}
+	case 1:
+		// MatchingType 0 = cert, 1 = sha256, 2 = sha512
+		switch matchtype {
+		case 0:
+			answer.DaneKey = hex.EncodeToString(smtpcert[0].RawSubjectPublicKeyInfo)
+		case 1:
+			sh256 := sha256.New()
+			sh256.Write(smtpcert[0].RawSubjectPublicKeyInfo)
+			sh256sum := hex.EncodeToString(sh256.Sum(nil))
+			answer.DaneKey = sh256sum
+		case 2:
+			sh512 := sha512.New()
+			sh512.Write(smtpcert[0].RawSubjectPublicKeyInfo)
 			sh512sum := hex.EncodeToString(sh512.Sum(nil))
 			answer.DaneKey = sh512sum
 		}
