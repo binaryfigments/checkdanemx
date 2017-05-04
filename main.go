@@ -14,7 +14,7 @@ import (
 func main() {
 	checkHost := flag.String("domain", "", "The domain name to test. (Required)")
 	checkNameserver := flag.String("nameserver", "8.8.8.8", "The nameserver to use.")
-	checkOutput := flag.String("output", "json", "What output format: json or text.")
+	checkOutput := flag.String("output", "text", "What output format: json or text.")
 	flag.Parse()
 	if *checkHost == "" {
 		flag.PrintDefaults()
@@ -48,13 +48,20 @@ func main() {
 			fmt.Printf("MX Record......: %v\n", mx.Mx)
 			fmt.Printf("Preference.....: %v\n", mx.Preference)
 			if mx.TLSA.Certificate == "" {
-				color.Red("TLSA Record....: %s", "NONE")
+				color.Red("TLSA Record............: %s", "NONE")
 			} else {
-				color.Green("TLSA Record....: %s", mx.TLSA.Record)
-				fmt.Printf("Selector.......: %v\n", mx.TLSA.Selector)
-				fmt.Printf("Usage..........: %v\n", mx.TLSA.Usage)
-				fmt.Printf("MatchingType...: %v\n", mx.TLSA.MatchingType)
-				fmt.Printf("Certificate....: %v\n", mx.TLSA.Certificate)
+				color.Green("TLSA Record............: %s", mx.TLSA.Record)
+				fmt.Printf("Selector...............: %v\n", mx.TLSA.Selector)
+				fmt.Printf("Usage..................: %v\n", mx.TLSA.Usage)
+				fmt.Printf("MatchingType...........: %v\n", mx.TLSA.MatchingType)
+				fmt.Printf("Certificate (DNS)......: %v\n", mx.TLSA.Certificate)
+				color.Cyan("CommonName.............: %s ]", mx.CertInfo.CommonName)
+				fmt.Printf("Certificate (Server)...: %v\n", mx.CertInfo.Certificate)
+				if mx.TLSA.Certificate == mx.CertInfo.Certificate {
+					color.Green("DANE Matching..........: %s", "Yes, DANE is OK!")
+				} else {
+					color.Red("DANE Matching..........: %s", "No, DANE Fails!")
+				}
 			}
 		}
 		fmt.Println("")
