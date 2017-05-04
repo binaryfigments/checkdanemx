@@ -50,30 +50,8 @@ func Run(domain string, startnameserver string) (*checkdata.Message, error) {
 		fmt.Printf("[X] No MX records found for  %v\n", domain)
 	}
 
-	for _, mx := range msg.Answer.MxRecords {
-		mxhost := strings.TrimSuffix(mx.Mx, ".")
-		certinfo, err := getCertInfo(mxhost + ":25")
-		if err != nil {
-			fmt.Printf("[X] Error getting cert from, %v %v\n", mxhost+":25", err)
-		}
-		fmt.Printf("[*] Cert1: %s\n", certinfo.CommonName)
-		fmt.Printf("[*] Cert1: %x\n", certinfo.SubjectPublicKeyInfoFull)
-		fmt.Printf("[*] Cert1: %x\n", certinfo.SubjectPublicKeyInfoSha256)
-		fmt.Printf("[*] Cert1: %x\n", certinfo.SubjectPublicKeyInfoSha512)
-	}
-
 	msg.Question.JobStatus = "OK"
 	msg.Question.JobMessage = "Job done!"
-
-	hosnameport := "smtp.xs4all.nl:25"
-	certinfo, err := getCertInfo(hosnameport)
-	if err != nil {
-		fmt.Printf("[X] Error getting cert from, %v %v\n", hosnameport, err)
-	}
-	fmt.Printf("[*] Cert1: %s\n", certinfo.CommonName)
-	fmt.Printf("[*] Cert1: %x\n", certinfo.SubjectPublicKeyInfoFull)
-	fmt.Printf("[*] Cert1: %x\n", certinfo.SubjectPublicKeyInfoSha256)
-	fmt.Printf("[*] Cert1: %x\n", certinfo.SubjectPublicKeyInfoSha512)
 
 	return msg, err
 }
@@ -100,7 +78,7 @@ func resolveMxTlsa(domain string, nameserver string) ([]*checkdata.MxRecords, er
 			mxs.Mx = a.Mx
 			mxs.Preference = a.Preference
 			hostname := strings.TrimSuffix(a.Mx, ".")
-			//hosnameport := hostname + ":25"
+			hosnameport := hostname + ":25"
 
 			checktlsamx := "_25._tcp." + hostname
 			domainmxtlsa, err := resolveTLSARecord(checktlsamx, nameserver)
@@ -109,14 +87,12 @@ func resolveMxTlsa(domain string, nameserver string) ([]*checkdata.MxRecords, er
 				mxs.TLSA = domainmxtlsa
 			} else {
 				mxs.TLSA = domainmxtlsa
-				/*
-					fmt.Printf("[*] Getting certificate from %v\n", hosnameport)
-					certinfo, err := getCertInfo(hosnameport)
-					if err != nil {
-						fmt.Printf("[X] Error getting cert from, %v %v\n", hosnameport, err)
-						mxs.CertInfo = certinfo
-					}
-				*/
+				fmt.Printf("[*] Getting certificate from %v\n", hosnameport)
+				certinfo, err := getCertInfo(hosnameport)
+				if err != nil {
+					fmt.Printf("[X] Error getting cert from, %v %v\n", hosnameport, err)
+					mxs.CertInfo = certinfo
+				}
 			}
 			answer = append(answer, mxs)
 		}
