@@ -40,6 +40,6 @@ type Tlsa struct {
 
 // CertInfo struct for certificate information
 type CertInfo struct {
-	CommonName string `json:"common_name,omitempty"`
-	DaneKey    string `json:"dane_key,omitempty"`
+	CommonName  string `json:"common_name,omitempty"`
+	Certificate string `json:"certificate,omitempty"`
 }
