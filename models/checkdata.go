@@ -23,9 +23,10 @@ type Answer struct {
 
 // MxRecords struct for MX records
 type MxRecords struct {
-	Mx         string `json:"mx,omitempty"`
-	Preference uint16 `json:"preference,omitempty"`
-	TLSA       *Tlsa  `json:"tlsa,omitempty"`
+	Mx         string    `json:"mx,omitempty"`
+	Preference uint16    `json:"preference,omitempty"`
+	TLSA       *Tlsa     `json:"tlsa,omitempty"`
+	CertInfo   *CertInfo `json:"cert_info,omitempty"`
 }
 
 // Tlsa struct for SOA information
@@ -35,4 +36,12 @@ type Tlsa struct {
 	MatchingType uint8  `json:"matchingtype"`
 	Selector     uint8  `json:"selector"`
 	Usage        uint8  `json:"usage"`
+}
+
+// CertInfo struct for certificate information
+type CertInfo struct {
+	CommonName                 string `json:"common_name,omitempty"`
+	SubjectPublicKeyInfoFull   string `json:"subject_puclic_key_info_full,omitempty"`
+	SubjectPublicKeyInfoSha256 string `json:"subject_puclic_key_info_sha256,omitempty"`
+	SubjectPublicKeyInfoSha512 string `json:"subject_puclic_key_info_sha512,omitempty"`
 }
