@@ -14,6 +14,7 @@ Some things to do:
 
 * DNSSEC check, no DANE with no DNSSEC
 * ~~Compare certificate with hash~~
+* Test for Usage 2, DANE-TA. Option 0 and 1 are not supported by SMTP.
 
 ## Installation
 
