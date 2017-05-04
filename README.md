@@ -92,8 +92,9 @@ import (
 func main() {
 	domain := "example.org"
 	nameserver := "8.8.8.8"
+    certs := "yes" // check the server certs
 
-	check, err := checkdanemx.Run(domain, nameserver)
+	check, err := checkdanemx.Run(domain, nameserver, certs)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
