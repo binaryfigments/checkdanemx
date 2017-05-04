@@ -26,7 +26,7 @@ type MxRecords struct {
 	Mx         string    `json:"mx,omitempty"`
 	Preference uint16    `json:"preference,omitempty"`
 	TLSA       *Tlsa     `json:"tlsa,omitempty"`
-	CertInfo   *CertInfo `json:"cert_info,omitempty"`
+	CertInfo   *CertInfo `json:"cert,omitempty"`
 }
 
 // Tlsa struct for SOA information
