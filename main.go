@@ -45,8 +45,8 @@ func main() {
 		for _, mx := range check.Answer.MxRecords {
 			fmt.Println("")
 			color.Cyan("[ MX and TLSA Records for: %s ]", check.Question.JobDomain)
-			fmt.Printf("MX Record......: %v\n", mx.Mx)
-			fmt.Printf("Preference.....: %v\n", mx.Preference)
+			fmt.Printf("MX Record..............: %v\n", mx.Mx)
+			fmt.Printf("Preference.............: %v\n", mx.Preference)
 			if mx.TLSA.Certificate == "" {
 				color.Red("TLSA Record............: %s", "NONE")
 			} else {
@@ -55,7 +55,7 @@ func main() {
 				fmt.Printf("Usage..................: %v\n", mx.TLSA.Usage)
 				fmt.Printf("MatchingType...........: %v\n", mx.TLSA.MatchingType)
 				fmt.Printf("Certificate (DNS)......: %v\n", mx.TLSA.Certificate)
-				color.Cyan("CommonName.............: %s ]", mx.CertInfo.CommonName)
+				color.Cyan("CommonName.............: %s", mx.CertInfo.CommonName)
 				fmt.Printf("Certificate (Server)...: %v\n", mx.CertInfo.Certificate)
 				if mx.TLSA.Certificate == mx.CertInfo.Certificate {
 					color.Green("DANE Matching..........: %s", "Yes, DANE is OK!")
