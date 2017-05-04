@@ -88,7 +88,7 @@ func resolveMxTlsa(domain string, nameserver string) ([]*checkdata.MxRecords, er
 			} else {
 				mxs.TLSA = domainmxtlsa
 				fmt.Printf("[*] Getting certificate from %v\n", hosnameport)
-				certinfo, err := getCertInfo(hosnameport)
+				certinfo, err := getCertInfo(hosnameport, mxs.TLSA.Selector, mxs.TLSA.MatchingType)
 				if err != nil {
 					fmt.Printf("[X] Error getting cert from, %v %v\n", hosnameport, err)
 					mxs.CertInfo = certinfo
