@@ -34,8 +34,7 @@ func Run(domain string, startnameserver string, checkCerts string) (*checkdata.M
 		return msg, err
 	}
 
-	// Go check DNS!
-
+	// Check DNS!
 	domainstate := checkDomainState(domain, nameServer)
 	if domainstate != "OK" {
 		// log.Println(domainstate)
@@ -44,10 +43,38 @@ func Run(domain string, startnameserver string, checkCerts string) (*checkdata.M
 		return msg, err
 	}
 
+	// Get MX records
 	mxrecords, err := resolveMxTlsa(domain, nameServer, checkCerts)
 	msg.Answer.MxRecords = mxrecords
 	if msg.Answer.MxRecords == nil {
 		fmt.Printf("[X] No MX records found for  %v\n", domain)
+	}
+
+	// Get TLSA records
+	for _, mx := range msg.Answer.MxRecords {
+		hostname := strings.TrimSuffix(mx.Mx, ".")
+		// hosnameport := hostname + ":25"
+		checktlsamx := "_25._tcp." + hostname
+
+		records := new(checkdata.Tlsa)
+
+		domainmxtlsa, err := resolveTLSARecord(checktlsamx, nameServer)
+		if err != nil {
+			records = domainmxtlsa
+		} else {
+			records = domainmxtlsa
+			/*
+				if checkCerts == "yes" {
+					certinfo, err := getCertInfo(hosnameport, mxs.TLSA.Selector, mxs.TLSA.MatchingType)
+					if err != nil {
+						mxs.CertInfo = certinfo
+					} else {
+						mxs.CertInfo = certinfo
+					}
+				}
+			*/
+		}
+		mx.TLSA = records
 	}
 
 	msg.Question.JobStatus = "OK"
@@ -77,27 +104,27 @@ func resolveMxTlsa(domain string, nameserver string, checkCerts string) ([]*chec
 			mxs := new(checkdata.MxRecords)
 			mxs.Mx = a.Mx
 			mxs.Preference = a.Preference
-			hostname := strings.TrimSuffix(a.Mx, ".")
-			hosnameport := hostname + ":25"
 
-			checktlsamx := "_25._tcp." + hostname
-			domainmxtlsa, err := resolveTLSARecord(checktlsamx, nameserver)
-			if err != nil {
-				// fmt.Printf("[X] Error checking for TLSA record %v\n", checktlsamx)
-				mxs.TLSA = domainmxtlsa
-			} else {
-				mxs.TLSA = domainmxtlsa
-				if checkCerts == "yes" {
-					// fmt.Printf("[*] Getting certificate from %v\n", hosnameport)
-					certinfo, err := getCertInfo(hosnameport, mxs.TLSA.Selector, mxs.TLSA.MatchingType)
-					if err != nil {
-						// fmt.Printf("[X] Error getting cert from, %v %v\n", hosnameport, err)
-						mxs.CertInfo = certinfo
-					} else {
-						mxs.CertInfo = certinfo
+			/*
+				hostname := strings.TrimSuffix(a.Mx, ".")
+				hosnameport := hostname + ":25"
+				checktlsamx := "_25._tcp." + hostname
+				domainmxtlsa, err := resolveTLSARecord(checktlsamx, nameserver)
+				if err != nil {
+					mxs.TLSA = domainmxtlsa
+				} else {
+					mxs.TLSA = domainmxtlsa
+					if checkCerts == "yes" {
+						certinfo, err := getCertInfo(hosnameport, mxs.TLSA.Selector, mxs.TLSA.MatchingType)
+						if err != nil {
+							mxs.CertInfo = certinfo
+						} else {
+							mxs.CertInfo = certinfo
+						}
 					}
 				}
-			}
+			*/
+
 			answer = append(answer, mxs)
 		}
 	}
@@ -106,6 +133,29 @@ func resolveMxTlsa(domain string, nameserver string, checkCerts string) ([]*chec
 
 // resolveTLSARecord for checking TLSA
 func resolveTLSARecord(record string, nameserver string) (*checkdata.Tlsa, error) {
+	answer := new(checkdata.Tlsa)
+	m := new(dns.Msg)
+	m.SetQuestion(dns.Fqdn(record), dns.TypeTLSA)
+	c := new(dns.Client)
+	m.MsgHdr.RecursionDesired = true
+	in, _, err := c.Exchange(m, nameserver)
+	if err != nil {
+		return answer, err
+	}
+	for _, value := range in.Answer {
+		if tlsa, ok := value.(*dns.TLSA); ok {
+			answer.Record = record
+			answer.Certificate = tlsa.Certificate
+			answer.MatchingType = tlsa.MatchingType
+			answer.Selector = tlsa.Selector
+			answer.Usage = tlsa.Usage
+		}
+	}
+	return answer, nil
+}
+
+// resolveTLSARecords for checking TLSA
+func resolveTLSARecords(record string, nameserver string) (*checkdata.Tlsa, error) {
 	answer := new(checkdata.Tlsa)
 	m := new(dns.Msg)
 	m.SetQuestion(dns.Fqdn(record), dns.TypeTLSA)
