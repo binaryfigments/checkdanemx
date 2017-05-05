@@ -50,25 +50,27 @@ func main() {
 			fmt.Println("")
 			fmt.Printf("MX Record..............: %v\n", mx.Mx)
 			fmt.Printf("Preference.............: %v\n", mx.Preference)
-			if mx.TLSA.Certificate == "" {
-				color.Red("TLSA Records...........: %s", "NONE")
-			} else {
-				color.Green("TLSA Records...........: %s", mx.TLSA.Record)
-				fmt.Printf("Usage..................: %v\n", mx.TLSA.Usage)
-				fmt.Printf("Selector...............: %v\n", mx.TLSA.Selector)
-				fmt.Printf("MatchingType...........: %v\n", mx.TLSA.MatchingType)
-				fmt.Printf("Certificate (DNS)......: %v\n", mx.TLSA.Certificate)
-				if *checkCerts == "yes" {
-					color.Cyan("CommonName.............: %s", mx.CertInfo.CommonName)
-					fmt.Printf("Certificate (Server)...: %v\n", mx.CertInfo.Certificate)
-					if mx.TLSA.Certificate == mx.CertInfo.Certificate {
-						color.Green("DANE Matching..........: %s", "Yes, DANE is OK!")
-					} else {
-						color.Red("DANE Matching..........: %s", "No, DANE Fails!")
+			/*
+				if mx.TLSA.Certificate == "" {
+					color.Red("TLSA Records...........: %s", "NONE")
+				} else {
+					color.Green("TLSA Records...........: %s", mx.TLSA.Record)
+					fmt.Printf("Usage..................: %v\n", mx.TLSA.Usage)
+					fmt.Printf("Selector...............: %v\n", mx.TLSA.Selector)
+					fmt.Printf("MatchingType...........: %v\n", mx.TLSA.MatchingType)
+					fmt.Printf("Certificate (DNS)......: %v\n", mx.TLSA.Certificate)
+					if *checkCerts == "yes" {
+						color.Cyan("CommonName.............: %s", mx.CertInfo.CommonName)
+						fmt.Printf("Certificate (Server)...: %v\n", mx.CertInfo.Certificate)
+						if mx.TLSA.Certificate == mx.CertInfo.Certificate {
+							color.Green("DANE Matching..........: %s", "Yes, DANE is OK!")
+						} else {
+							color.Red("DANE Matching..........: %s", "No, DANE Fails!")
+						}
 					}
-				}
 
-			}
+				}
+			*/
 		}
 		fmt.Println("")
 	default:

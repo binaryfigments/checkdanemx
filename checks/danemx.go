@@ -50,31 +50,30 @@ func Run(domain string, startnameserver string, checkCerts string) (*checkdata.M
 		fmt.Printf("[X] No MX records found for  %v\n", domain)
 	}
 
-	// Get TLSA records
+	// Get TLSA records and Certs
 	for _, mx := range msg.Answer.MxRecords {
 		hostname := strings.TrimSuffix(mx.Mx, ".")
-		// hosnameport := hostname + ":25"
+		hosnameport := hostname + ":25"
 		checktlsamx := "_25._tcp." + hostname
 
-		records := new(checkdata.Tlsa)
-
-		domainmxtlsa, err := resolveTLSARecord(checktlsamx, nameServer)
+		domainmxtlsa, err := resolveTLSARecords(checktlsamx, nameServer)
 		if err != nil {
-			records = domainmxtlsa
+			mx.TLSA = domainmxtlsa
 		} else {
-			records = domainmxtlsa
-			/*
-				if checkCerts == "yes" {
-					certinfo, err := getCertInfo(hosnameport, mxs.TLSA.Selector, mxs.TLSA.MatchingType)
+			mx.TLSA = domainmxtlsa
+
+			if checkCerts == "yes" {
+				for _, tlsar := range domainmxtlsa {
+					certinfo, err := getCertInfo(hosnameport, tlsar.Selector, tlsar.MatchingType)
 					if err != nil {
-						mxs.CertInfo = certinfo
+						tlsar.ServerCertificate = certinfo
 					} else {
-						mxs.CertInfo = certinfo
+						tlsar.ServerCertificate = certinfo
 					}
 				}
-			*/
+			}
+
 		}
-		mx.TLSA = records
 	}
 
 	msg.Question.JobStatus = "OK"
@@ -131,32 +130,9 @@ func resolveMxTlsa(domain string, nameserver string, checkCerts string) ([]*chec
 	return answer, nil
 }
 
-// resolveTLSARecord for checking TLSA
-func resolveTLSARecord(record string, nameserver string) (*checkdata.Tlsa, error) {
-	answer := new(checkdata.Tlsa)
-	m := new(dns.Msg)
-	m.SetQuestion(dns.Fqdn(record), dns.TypeTLSA)
-	c := new(dns.Client)
-	m.MsgHdr.RecursionDesired = true
-	in, _, err := c.Exchange(m, nameserver)
-	if err != nil {
-		return answer, err
-	}
-	for _, value := range in.Answer {
-		if tlsa, ok := value.(*dns.TLSA); ok {
-			answer.Record = record
-			answer.Certificate = tlsa.Certificate
-			answer.MatchingType = tlsa.MatchingType
-			answer.Selector = tlsa.Selector
-			answer.Usage = tlsa.Usage
-		}
-	}
-	return answer, nil
-}
-
 // resolveTLSARecords for checking TLSA
-func resolveTLSARecords(record string, nameserver string) (*checkdata.Tlsa, error) {
-	answer := new(checkdata.Tlsa)
+func resolveTLSARecords(record string, nameserver string) ([]*checkdata.Tlsa, error) {
+	answer := []*checkdata.Tlsa{}
 	m := new(dns.Msg)
 	m.SetQuestion(dns.Fqdn(record), dns.TypeTLSA)
 	c := new(dns.Client)
@@ -167,11 +143,16 @@ func resolveTLSARecords(record string, nameserver string) (*checkdata.Tlsa, erro
 	}
 	for _, value := range in.Answer {
 		if tlsa, ok := value.(*dns.TLSA); ok {
-			answer.Record = record
-			answer.Certificate = tlsa.Certificate
-			answer.MatchingType = tlsa.MatchingType
-			answer.Selector = tlsa.Selector
-			answer.Usage = tlsa.Usage
+			//
+			tlsar := new(checkdata.Tlsa)
+			tlsar.Record = record
+			tlsar.Certificate = tlsa.Certificate
+			tlsar.MatchingType = tlsa.MatchingType
+			tlsar.Selector = tlsa.Selector
+			tlsar.Usage = tlsa.Usage
+			answer = append(answer, tlsar)
+
+			//
 		}
 	}
 	return answer, nil
