@@ -54,8 +54,8 @@ func main() {
 				color.Red("TLSA Record............: %s", "NONE")
 			} else {
 				color.Green("TLSA Record............: %s", mx.TLSA.Record)
-				fmt.Printf("Selector...............: %v\n", mx.TLSA.Selector)
 				fmt.Printf("Usage..................: %v\n", mx.TLSA.Usage)
+				fmt.Printf("Selector...............: %v\n", mx.TLSA.Selector)
 				fmt.Printf("MatchingType...........: %v\n", mx.TLSA.MatchingType)
 				fmt.Printf("Certificate (DNS)......: %v\n", mx.TLSA.Certificate)
 				if *checkCerts == "yes" {

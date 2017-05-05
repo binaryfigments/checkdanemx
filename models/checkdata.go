@@ -32,10 +32,10 @@ type MxRecords struct {
 // Tlsa struct for SOA information
 type Tlsa struct {
 	Record       string `json:"record"`
-	Certificate  string `json:"certificate"`
-	MatchingType uint8  `json:"matchingtype"`
-	Selector     uint8  `json:"selector"`
 	Usage        uint8  `json:"usage"`
+	Selector     uint8  `json:"selector"`
+	MatchingType uint8  `json:"matchingtype"`
+	Certificate  string `json:"certificate"`
 }
 
 // CertInfo struct for certificate information
