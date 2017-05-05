@@ -50,27 +50,23 @@ func main() {
 			fmt.Println("")
 			fmt.Printf("MX Record..............: %v\n", mx.Mx)
 			fmt.Printf("Preference.............: %v\n", mx.Preference)
-			/*
-				if mx.TLSA.Certificate == "" {
+			for _, tlsa := range mx.TLSA {
+				if tlsa.Certificate == "" {
 					color.Red("TLSA Records...........: %s", "NONE")
 				} else {
-					color.Green("TLSA Records...........: %s", mx.TLSA.Record)
-					fmt.Printf("Usage..................: %v\n", mx.TLSA.Usage)
-					fmt.Printf("Selector...............: %v\n", mx.TLSA.Selector)
-					fmt.Printf("MatchingType...........: %v\n", mx.TLSA.MatchingType)
-					fmt.Printf("Certificate (DNS)......: %v\n", mx.TLSA.Certificate)
+					color.Green("TLSA Records...........: %s", tlsa.Record)
+					fmt.Printf("Content................: %v %v %v %v\n", tlsa.Usage, tlsa.Selector, tlsa.MatchingType, tlsa.Certificate)
 					if *checkCerts == "yes" {
-						color.Cyan("CommonName.............: %s", mx.CertInfo.CommonName)
-						fmt.Printf("Certificate (Server)...: %v\n", mx.CertInfo.Certificate)
-						if mx.TLSA.Certificate == mx.CertInfo.Certificate {
+						color.Cyan("CommonName.............: %s", tlsa.ServerCertificate.CommonName)
+						fmt.Printf("Certificate (Server)...: %v\n", tlsa.ServerCertificate.Certificate)
+						if tlsa.Certificate == tlsa.ServerCertificate.Certificate {
 							color.Green("DANE Matching..........: %s", "Yes, DANE is OK!")
 						} else {
 							color.Red("DANE Matching..........: %s", "No, DANE Fails!")
 						}
 					}
-
 				}
-			*/
+			}
 		}
 		fmt.Println("")
 	default:
