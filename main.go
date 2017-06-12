@@ -60,6 +60,7 @@ func main() {
 					if *checkCerts == "yes" {
 						color.Cyan("CommonName.............: %s", tlsa.ServerCertificate.CommonName)
 						fmt.Printf("Certificate (Server)...: %v\n", tlsa.ServerCertificate.Certificate)
+						fmt.Printf("NotAfter...............: %v\n", tlsa.ServerCertificate.Expires)
 						if tlsa.Certificate == tlsa.ServerCertificate.Certificate {
 							color.Green("DANE Matching..........: %s", "Yes, DANE is OK!")
 						} else {

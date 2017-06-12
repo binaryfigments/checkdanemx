@@ -41,6 +41,7 @@ type Tlsa struct {
 
 // CertInfo struct for certificate information
 type CertInfo struct {
-	CommonName  string `json:"common_name,omitempty"`
-	Certificate string `json:"certificate,omitempty"`
+	CommonName  string    `json:"common_name,omitempty"`
+	Certificate string    `json:"certificate,omitempty"`
+	Expires     time.Time `json:"expires,omitempty"`
 }

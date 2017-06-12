@@ -60,6 +60,7 @@ func getCertInfo(server string, selector uint8, matchtype uint8) (*checkdata.Cer
 	}
 
 	answer.CommonName = smtpcert[0].Subject.CommonName
+	answer.Expires = smtpcert[0].NotAfter
 
 	return answer, nil
 }
