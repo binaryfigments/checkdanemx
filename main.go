@@ -73,7 +73,7 @@ func main() {
 		}
 		fmt.Println("")
 	default:
-		err := errors.New("Output format is not json or text.")
+		err := errors.New("output format is not json or text")
 		fmt.Println(err)
 		os.Exit(1)
 	}
