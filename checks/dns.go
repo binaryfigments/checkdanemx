@@ -10,7 +10,6 @@ func checkDomainState(domain string, nameserver string) string {
 	m.MsgHdr.RecursionDesired = true
 	c := new(dns.Client)
 
-Redo:
 	in, _, err := c.Exchange(m, nameserver)
 
 	if err == nil {
@@ -24,9 +23,6 @@ Redo:
 		default:
 			return "OK"
 		}
-	} else if err == dns.ErrTruncated {
-		c.Net = "tcp"
-		goto Redo
 	} else {
 		return "500, 501, DNS server could not be reached"
 	}
