@@ -24,6 +24,6 @@ func checkDomainState(domain string, nameserver string) string {
 			return "OK"
 		}
 	} else {
-		return "500, 501, DNS server could not be reached"
+		return "501, DNS server could not be reached"
 	}
 }
